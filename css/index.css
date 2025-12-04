@@ -1,0 +1,38 @@
+*{
+    padding:0;
+    margin:0;
+}
+.topBox{
+    background-color:rgba(0,0,255,1.0);
+    height:250px;
+}
+.topTitle{
+    font-weight:700;
+    color:rgba(255,255,255,1.0);
+    display:block;
+    font-size:50px;
+    text-align:center;
+    padding-top:50px;
+}
+.topSubtitle {
+    text-align: center;
+    color: rgba(255,255,255,1.0);
+    display: block;
+    font-size:25px;
+    padding-left:25px;
+}
+.middleBox {
+    margin: 10px auto;
+    border: 2px solid rgba(0,0,0,1.0);
+    border-radius: 2.5px;
+    width:1000px;
+}
+.middleTitle{
+    font-weight:600;
+    color:rgba(0,0,255,1.0);
+    padding-left:10px;
+    padding-top:10px;
+}
+.middleText {
+    padding-left: 10px;
+}
