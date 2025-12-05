@@ -1,0 +1,10 @@
+.btna{
+	width:200px;
+	height:100px;
+	color:rgba(255,255,255,1.0);
+	background-color: rgba(126, 229, 88, 1.0);
+	border:none;
+	font-size:25px;
+	cursor:pointer;
+	border-radius:180px;
+}
