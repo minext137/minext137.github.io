@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎓 六年二班 · 毕业纪念</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Noto Sans SC", "微软雅黑", "PingFang SC", sans-serif;
+    background: #0b0b1a;
+    color: #e8e8f0;
+}
+
+/* ===== 弹幕 ===== */
+#danmakuContainer {
+    position: fixed; inset: 0; z-index: 9999;
+    pointer-events: none; overflow: hidden;
+}
+.danmaku-item {
+    position: absolute; white-space: nowrap;
+    font-size: 16px; font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    text-shadow: 0 0 10px rgba(162,155,254,0.2);
+    animation: danmakuScroll linear forwards;
+    pointer-events: none;
+}
+@keyframes danmakuScroll {
+    0% { transform: translateX(calc(100vw + 100px)); opacity: 0; }
+    2% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateX(-100%); opacity: 0; }
+}
+
+/* ===== 主容器 ===== */
+.container {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px 24px;
+    overflow: hidden;
+}
+
+/* 背景光晕 */
+.bg-blur {
+    position: fixed; inset: 0; pointer-events: none;
+}
+.bg-blur div {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18;
+    animation: blobFloat 12s ease-in-out infinite alternate;
+}
+.bg-blur div:nth-child(1) {
+    width: 400px; height: 400px; background: #6c5ce7;
+    top: -10%; left: -10%;
+}
+.bg-blur div:nth-child(2) {
+    width: 350px; height: 350px; background: #fd79a8;
+    bottom: -15%; right: -10%; animation-delay: 6s;
+}
+@keyframes blobFloat {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(30px,-30px) scale(1.15); }
+}
+
+/* ===== 顶栏 ===== */
+.top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: rgba(11,11,26,0.6);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.top-bar .title {
+    font-size: 14px; font-weight: 700;
+    background: linear-gradient(135deg, #a29bfe, #fd79a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.top-bar .controls {
+    display: flex; gap: 8px;
+}
+.top-bar button {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.top-bar button:hover {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.7);
+}
+.top-bar button.on {
+    background: rgba(162,155,254,0.15);
+    border-color: rgba(162,155,254,0.25);
+    color: #a29bfe;
+}
+
+/* ===== 进度指示 ===== */
+.progress {
+    position: fixed;
+    bottom: 110px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.progress-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    transition: all 0.3s;
+}
+.progress-dot.active {
+    background: #a29bfe;
+    box-shadow: 0 0 12px rgba(162,155,254,0.4);
+    width: 10px; height: 10px;
+}
+.progress-dot.done {
+    background: rgba(162,155,254,0.3);
+}
+
+/* ===== 内容卡片 ===== */
+.card {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 680px;
+    text-align: center;
+    animation: cardIn 0.6s ease-out forwards;
+}
+
+@keyframes cardIn {
+    0% { opacity: 0; transform: translateY(24px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card .badge {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 12px; font-weight: 600;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.card h1 {
+    font-size: clamp(30px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #f8f8ff, #a29bfe, #fd79a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card .text {
+    font-size: clamp(15px, 2.2vw, 19px);
+    color: rgba(255,255,255,0.65);
+    line-height: 2;
+    text-indent: 2em;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+.card .text.no-indent {
+    text-indent: 0;
+    text-align: center;
+}
+
+.card .highlight {
+    color: #a29bfe;
+    font-weight: 600;
+}
+
+/* ===== 按钮 ===== */
+.btn-area {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    text-align: center;
+}
+
+.btn-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 48px;
+    border-radius: 100px;
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    box-shadow: 0 6px 24px rgba(108,92,231,0.3);
+    transition: all 0.25s;
+}
+.btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(108,92,231,0.4);
+}
+.btn-next:active {
+    transform: scale(0.96);
+}
+.btn-next:disabled {
+    opacity: 0.3;
+    cursor: default;
+    transform: none !important;
+}
+
+.btn-hint {
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    margin-top: 10px;
+}
+
+/* ===== 页脚 ===== */
+.footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 100;
+    text-align: center;
+    padding: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.08);
+    background: rgba(11,11,26,0.4);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.footer-bar:hover {
+    color: rgba(255,255,255,0.2);
+}
+
+/* ===== 涟漪 ===== */
+#rippleContainer {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 9998;
+}
+.ripple {
+    position: absolute; border-radius: 50%;
+    border: 2px solid rgba(162,155,254,0.25);
+    transform: translate(-50%,-50%) scale(0);
+    animation: rippleAnim 0.8s ease-out forwards;
+    pointer-events: none;
+}
+@keyframes rippleAnim {
+    to { transform: translate(-50%,-50%) scale(4); opacity: 0; }
+}
+.fly-particle {
+    position: fixed; pointer-events: none; z-index: 9997;
+    font-size: 18px;
+    animation: particleFly 1.8s ease-out forwards;
+}
+@keyframes particleFly {
+    0% { opacity: 1; transform: translateY(0) scale(0.5) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(-100px) scale(1.3) rotate(180deg); }
+}
+
+@media (max-width: 480px) {
+    .container { padding: 30px 18px; }
+    .btn-next { padding: 14px 36px; font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<div id="rippleContainer"></div>
+<div id="danmakuContainer"></div>
+
+<div class="bg-blur"><div></div><div></div></div>
+
+<!-- 顶栏 -->
+<div class="top-bar">
+    <span class="title">🎓 六年二班</span>
+    <div class="controls">
+        <button id="danmaBtn" class="on">💬 弹幕</button>
+        <button id="resetBtn">⟳ 重来</button>
+    </div>
+</div>
+
+<!-- 进度点 -->
+<div class="progress" id="progressDots"></div>
+
+<!-- 内容 -->
+<div class="container" id="mainContainer">
+    <div class="card" id="cardContent"></div>
+</div>
+
+<!-- 按钮 -->
+<div class="btn-area">
+    <button class="btn-next" id="nextBtn">▶ 下一段</button>
+    <div class="btn-hint" id="btnHint">点击按钮继续阅读</div>
+</div>
+
+<!-- 页脚 -->
+<div class="footer-bar" id="footerBar">🎓 桦甸市一中心小学 · 六年二班 · 2018 — 2024</div>
+
+<script>
+// ===== 数据 =====
+const STEPS = [
+    // 0: 开场
+    {
+        badge: '🎓 六年二班',
+        title: '我们的故事',
+        lines: [
+            'class="no-indent"',
+            '这是一个关于六年二班的故事。',
+            '一个从2020年秋天开始，到2024年夏天结束的故事。',
+            '点击下面的按钮，和我们一起重温这段时光吧。',
+        ],
+    },
+    // 1: 2020入学
+    {
+        badge: '2020 年 · 秋',
+        title: '初次见面',
+        lines: [
+            '2020年的九月，我们背着新书包，走进了桦甸市一中心小学的大门。那时候疫情刚刚过去，我们都戴着口罩，只露出一双双好奇的眼睛。',
+            '教室在二楼，班主任站在讲台上微笑着欢迎我们。我们在座位上坐下，偷偷打量着身边的新闻学。谁也不认识谁，可心里却有一种莫名其妙的期待——接下来的六年，就是这些人了。',
+            '第一堂课，老师让我们在纸条上写下自己的名字，然后打乱顺序抽着读。每念出一个名字，大家就齐刷刷地看向那个人，然后悄悄地记住了TA的样子。那天放学的时候，我们已经能叫出大半同学的名字了。',
+            '现在回想起来，那个秋天的早晨阳光很好，窗外的树叶刚刚开始变黄。我们谁也没有想到，这普普通通的一天，竟然是我们六年故事的开始。',
+        ],
+    },
+    // 2: 日常
+    {
+        badge: '那些年 · 每一天',
+        title: '闪闪发光的日常',
+        lines: [
+            '上课的时候，我们一起朗读课文，一起在黑板上演算数学题，一起跟着录音机学英语。下课铃一响，教室里立刻热闹起来——有人冲出去跳皮筋，有人趴在走廊栏杆上聊天，有人凑在一起分享零食。那些课间十分钟，是我们最快乐的时光。',
+            '午饭时间，大家排着队去打饭，有人偷偷多拿一个鸡腿，有人把自己不喜欢的青菜悄悄塞给同桌。午休的时候，有人趴着睡觉，有人在桌子底下偷偷看课外书。窗外的风吹动窗帘，阳光洒在桌面上——那样的午后，安静又温暖。',
+            '体育课上，我们一起在操场上奔跑、踢球、跳绳。冬天的时候，我们一起堆雪人、打雪仗，手冻得通红也不肯回教室。春天的时候，我们在操场上放风筝，风筝飞得很高很高，就像我们的梦想一样。',
+            '还有那些一起大扫除的日子，一起出黑板报的日子，一起排练节目的日子，一起在考试前互相加油打气的日子……这些看起来平平无奇的日常，都是我们最珍贵的回忆。',
+        ],
+    },
+    // 3: 老师
+    {
+        badge: '感恩 · 师恩',
+        title: '最敬爱的老师',
+        lines: [
+            '这四年里，最想感谢的人，是我们的老师。他们每天来得比我们早，走得比我们晚。课堂上，他们耐心地讲解每一道题；课后，他们认真地批改每一本作业。我们进步时他们比我们还高兴，我们犯错时他们比我们还着急。',
+            '还记得老师为了让我们理解一道难题，在黑板前讲了一遍又一遍，粉笔写断了半盒。还记得老师在我们生病时关切的眼神，在我们难过时温暖的安慰，在我们迷茫时耐心的开导。',
+            '老师教给我们的，远远不止课本上的知识。他们教我们怎样做一个正直、善良、勇敢的人。他们告诉我们，失败不可怕，放弃才可怕。他们让我们相信，只要努力，就一定会有收获。',
+            '老师，谢谢你们。你们的教诲，我们会一直记在心里。以后无论走到哪里，我们都会记得，是你们为我们点亮了前行的路。',
+        ],
+    },
+    // 4: 同学
+    {
+        badge: '陪伴 · 同窗',
+        title: '最可爱的同学',
+        lines: [
+            '这四年里，陪伴我们最久的人，是身边的同学。我们一起经历了太多太多——一起在课堂上偷偷传纸条，一起在考试前紧张地复习，一起在运动会上拼尽全力，一起在文艺汇演上绽放光彩。',
+            '我们吵过架，闹过别扭，甚至说过"再也不跟你玩了"这样的气话。可是过不了一天，就又凑到一起有说有笑了。借过半块橡皮，分过一包零食，抄过彼此的作业——这些小小的瞬间，拼凑成了我们最温暖的回忆。',
+            '还记得有同学过生日的时候，我们偷偷准备惊喜，全班一起唱生日歌。还记得有同学生病请假的时候，我们帮忙记笔记、带作业。还记得下雨天的时候，有伞的同学拉着没伞的同学一起跑。',
+            '六年二班的每一个人，都是彼此童年里最重要的人。谢谢你们，陪我们走过了这段最美好的时光。',
+        ],
+    },
+    // 5: 告别
+    {
+        badge: '2024 年 · 夏',
+        title: '不说再见',
+        lines: [
+            '拍毕业照那天，天气很好，我们穿着整齐的校服站在操场上。摄影师让我们喊"茄子"，我们使劲地喊，笑得眼睛都眯成了一条缝。"咔嚓"一声，四年的时光就被定格在了那一张小小的照片里。',
+            '毕业典礼上，校长在台上讲话，我们坐在台下安安静静地听着。那一刻，我们才真正意识到——真的要毕业了。从今以后，我们不会再坐在同一间教室里上课，不会再一起做早操，不会再在课间十分钟争分夺秒地玩了。',
+            '典礼结束后，我们在校园里拍照留念。夕阳特别美，金色的光洒在教学楼上，洒在操场上，洒在每一个人的脸上。我们在校门口告别，笑着说"以后常联系"，心里却满满的都是舍不得。',
+            '可是啊，毕业不是终点，而是新的起点。我们即将奔赴不同的学校，去认识新的朋友，去学习新的知识。但我们永远不会忘记，在桦甸市一中心小学，有一个叫六年二班的地方——那是我们梦开始的地方。',
+        ],
+    },
+    // 6: 祝福
+    {
+        badge: '💜 永不散场',
+        title: '前程似锦 · 未来可期',
+        lines: [
+            '亲爱的同学们，愿你们在未来的日子里，心中有梦，眼里有光。愿你们在新的学校里，交到知心的朋友，学到更多的知识，成为更好的自己。愿你们在迷茫的时候，记得曾经那个勇敢、纯粹、无所畏惧的自己。',
+            '愿你们前程似锦，愿你们未来可期，愿你们历尽千帆，归来仍是少年。无论走到哪里，六年二班永远是你们的家。我们在这里相遇，在这里成长，从这里出发，奔赴各自的星辰大海。',
+            '多年以后，如果我们在某个街角重逢，希望我们还能像从前一样，笑着喊出彼此的名字，说一声——"好久不见，老同学。"',
+            'class="no-indent"',
+            '六年二班的故事到这里就结束了。',
+            '但我们的故事，才刚刚开始。',
+            '珍重，再见。💜',
+        ],
+    },
+];
+
+// ===== 弹幕 =====
+const DANMAKU = [
+    "六年二班 永不散场 💜","毕业快乐 🎉","前程似锦 🌟","最好的我们 ✨",
+    "青春不散场 🏆","老师辛苦了 🌸","同桌的你 📝","后会有期 🤝",
+    "时光匆匆 📅","以梦为马 🚀","不负韶华 💪","未来可期 🌈",
+    "友谊长存 💕","感恩遇见 🙏","一路向阳 ☀️","顶峰相见 ⛰️",
+    "永远怀念 ⭐","谢谢你们 💜","童年万岁 🎠","不说再见 👋",
+    "各自努力 🎯","珍重朋友 🌻","一起长大 🌱","毕业快乐 🎓",
+    "永远的二班 💜","有缘再见 🌊","不忘初心 ❤️","砥砺前行 🔥",
+];
+
+let danmakuOn = true;
+let danmaTimer = null;
+
+function createDanmaku(text) {
+    if (!danmakuOn) return;
+    const c = document.getElementById('danmakuContainer');
+    const el = document.createElement('div');
+    el.className = 'danmaku-item';
+    el.textContent = text;
+    el.style.top = (Math.random() * 80 + 8) + 'vh';
+    el.style.fontSize = (14 + Math.random() * 10) + 'px';
+    el.style.color = `hsla(${Math.random() * 360}, 65%, 70%, 0.7)`;
+    el.style.animationDuration = (8 + Math.random() * 10) + 's';
+    c.appendChild(el);
+    setTimeout(() => el.remove(), 20000);
+}
+
+function startDanmaku() {
+    if (danmaTimer) return;
+    for (let i = 0; i < 15; i++) {
+        setTimeout(() => createDanmaku(DANMAKU[Math.random() * DANMAKU.length | 0]), i * 350);
+    }
+    danmaTimer = setInterval(() => {
+        createDanmaku(DANMAKU[Math.random() * DANMAKU.length | 0]);
+    }, 2500);
+}
+startDanmaku();
+
+document.getElementById('danmaBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    danmakuOn = !danmakuOn;
+    this.textContent = danmakuOn ? '💬 弹幕' : '💬 弹幕';
+    this.className = danmakuOn ? 'on' : '';
+    if (danmakuOn) startDanmaku();
+});
+
+// ===== 核心：逐段显示 =====
+let currentStep = 0;
+let currentLine = 0;  // 当前步骤中显示到第几行
+
+const cardEl = document.getElementById('cardContent');
+const nextBtn = document.getElementById('nextBtn');
+const btnHint = document.getElementById('btnHint');
+const progressEl = document.getElementById('progressDots');
+const totalSteps = STEPS.length;
+
+// 初始化进度点
+for (let i = 0; i < totalSteps; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
+    progressEl.appendChild(dot);
+}
+
+function updateProgress() {
+    const dots = progressEl.querySelectorAll('.progress-dot');
+    dots.forEach((d, i) => {
+        d.className = 'progress-dot';
+        if (i < currentStep) d.classList.add('done');
+        else if (i === currentStep) d.classList.add('active');
+    });
+}
+
+function renderStep(stepIdx, fromScratch) {
+    const step = STEPS[stepIdx];
+    if (!step) return;
+
+    let html = '';
+    if (step.badge) html += `<div class="badge">${step.badge}</div>`;
+    html += `<h1>${step.title}</h1>`;
+
+    // 决定显示多少行
+    const showCount = fromScratch ? 1 : (currentLine + 1);
+
+    for (let i = 0; i < Math.min(showCount, step.lines.length); i++) {
+        const line = step.lines[i];
+        if (line.startsWith('class=')) {
+            // 特殊属性
+            const cls = line.match(/class="([^"]+)"/);
+            html += `<p class="${cls ? cls[1] : ''}" style="margin-top:12px;">`;
+            // 后面的行作为内容
+            continue;
+        }
+        // 普通文字行
+        if (html.endsWith('">')) {
+            // 接在特殊行的后面
+            html += line + '</p>';
+        } else {
+            html += `<p>${line}</p>`;
+        }
+    }
+
+    // 处理最后可能未闭合的 p
+    if (html.endsWith('">')) {
+        html += '</p>';
+    }
+
+    cardEl.innerHTML = html;
+    cardEl.style.animation = 'none';
+    cardEl.offsetHeight;
+    cardEl.style.animation = 'cardIn 0.6s ease-out forwards';
+    updateProgress();
+    updateButton(stepIdx, fromScratch ? 0 : currentLine);
+}
+
+function updateButton(stepIdx, lineIdx) {
+    const step = STEPS[stepIdx];
+    const isLastStep = stepIdx >= totalSteps - 1;
+    const isLastLine = lineIdx >= step.lines.length - 1;
+
+    if (isLastStep && isLastLine) {
+        nextBtn.textContent = '💜 感谢阅读';
+        nextBtn.disabled = true;
+        btnHint.textContent = '我们的故事，到这里就结束了';
+    } else if (isLastLine) {
+        nextBtn.textContent = '▶ 下一篇';
+        btnHint.textContent = '进入下一章';
+    } else {
+        const remain = step.lines.length - lineIdx - 1;
+        nextBtn.textContent = `▼ 继续阅读 (还有 ${remain} 段)`;
+        btnHint.textContent = '点击显示更多';
+    }
+}
+
+// 显示下一段
+function advance() {
+    const step = STEPS[currentStep];
+    if (!step) return;
+
+    if (currentLine < step.lines.length - 1) {
+        // 当前步骤还有未显示的行
+        currentLine++;
+        renderStep(currentStep, false);
+    } else if (currentStep < totalSteps - 1) {
+        // 进入下一步
+        currentStep++;
+        currentLine = 0;
+        renderStep(currentStep, true);
+    }
+}
+
+// 重置
+function resetAll() {
+    currentStep = 0;
+    currentLine = 0;
+    cardEl.style.animation = 'none';
+    renderStep(0, true);
+    btnHint.textContent = '点击按钮继续阅读';
+}
+
+// 初始渲染
+renderStep(0, true);
+
+// 按钮点击
+nextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    advance();
+});
+
+// ===== 全局点击特效 =====
+function createRipple(x, y) {
+    const c = document.getElementById('rippleContainer');
+    const el = document.createElement('div');
+    el.className = 'ripple';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    const size = 20 + Math.random() * 40;
+    el.style.width = size + 'px'; el.style.height = size + 'px';
+    c.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+}
+function createParticles(x, y) {
+    const emojis = ['💜','✨','🌟','⭐','💫','🌈','🎓','🎉'];
+    for (let i = 0; i < 6; i++) {
+        const el = document.createElement('div');
+        el.className = 'fly-particle';
+        el.textContent = emojis[Math.random() * emojis.length | 0];
+        el.style.left = (x + (Math.random() - 0.5) * 60) + 'px';
+        el.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
+        el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2200);
+    }
+}
+document.addEventListener('click', (e) => {
+    createRipple(e.clientX, e.clientY);
+    createParticles(e.clientX, e.clientY);
+});
+
+// 重置按钮
+document.getElementById('resetBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    resetAll();
+});
+
+// 页脚彩蛋
+document.getElementById('footerBar').addEventListener('click', function(e) {
+    e.stopPropagation();
+    const msgs = ['青春不散场 💜','六年二班 🏆','永远怀念 🌟','毕业快乐 🎓','前程似锦 🚀'];
+    const m = msgs[Math.random() * msgs.length | 0];
+    for (let i = 0; i < 4; i++) {
+        setTimeout(() => createDanmaku(m), i * 250);
+    }
+});
+
+console.log('🎓 六年二班 · 毕业纪念');
+</script>
+</body>
+</html>

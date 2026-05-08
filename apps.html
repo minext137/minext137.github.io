@@ -1,34 +1,333 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>AMPT8528 - apps</title>
-		<a href="./index.html">返回</a>
-		<link rel="stylesheet" href="./css/apps.css" />
-	</head>
-	<body>
-		<h1 class="title">Download your Apps.</h1>
-		<p class="subtitle">Pursur what do you want to have.</p>
-		<div class="appList">
-			<div class="sbox">
-				<p class="inText1">spaceSniffer</p>
-				<a class="inBtn1" href="./apps/spaceSniffer/index.html">查看详情</a>
-			</div>
-			<div class="sbox">
-				<p class="inText1">FlashPlayer11</p>
-				<a class="inBtn1" href="./apps/flashPlayer11/index.html">查看详情</a>
-			</div>
-			<div class="sbox">
-				<p class="inText1">Python 3.11.0</p>
-				<a class="inBtn1" href="https://www.python.org/ftp/python/3.11.1/python-3.11.1.exe">下载</a>
-			</div>
-			<div class="sbox">
-				<p class="inText1">Dev-Cpp 6.7.5</p>
-				<a class="inBtn1" href="https://202603232353.yzhy15.cn/down/pcsoft/2026/01/29/devc_v6.7.5.zip?timestamp=69c3b7fb&md5hash=63752d2ac4fcfba4b33b2b647d1670bb&auth_key=63752d2ac4fcfba4b33b2b647d1670bb&sign=f9af4c038aa3a0e61acdc9fb2f9dc6ed&t=69c3c60b">下载</a>
-			</div>
-			<div class="sbox">
-				<p class="inText1">Geek Uninstaller For Personal Free 1.5.3.170</p>
-				<a class="inBtn1" href="https://geekuninstaller.com/geek.zip">下载</a>
-		</div>
-	</body>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMPT8528 - 应用</title>
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: "Noto Sans SC", "微软雅黑", "PingFang SC", sans-serif;
+        background: #0b0b1a;
+        color: #e8e8f0;
+        min-height: 100vh;
+        padding: 32px 20px 80px;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* 背景光晕 */
+    .bg-blur {
+        position: fixed; inset: 0; pointer-events: none;
+    }
+    .bg-blur div {
+        position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.12;
+        animation: blobFloat 12s ease-in-out infinite alternate;
+    }
+    .bg-blur div:nth-child(1) {
+        width: 400px; height: 400px; background: #6c5ce7; top: -10%; left: -5%;
+    }
+    .bg-blur div:nth-child(2) {
+        width: 350px; height: 350px; background: #00cec9; bottom: -10%; right: -5%;
+        animation-delay: 6s;
+    }
+    @keyframes blobFloat {
+        0% { transform: translate(0,0) scale(1); }
+        100% { transform: translate(30px,-30px) scale(1.15); }
+    }
+
+    /* 导航栏 */
+    .nav-bar {
+        position: fixed; top: 0; left: 0; right: 0;
+        z-index: 100;
+        display: flex; align-items: center;
+        padding: 12px 20px;
+        background: rgba(11,11,26,0.6);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-bar a {
+        color: rgba(255,255,255,0.35);
+        text-decoration: none;
+        font-size: 13px; font-weight: 500;
+        transition: color 0.2s;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .nav-bar a:hover { color: rgba(255,255,255,0.6); }
+    .nav-bar .sep { color: rgba(255,255,255,0.1); margin: 0 10px; }
+    .nav-bar .cur {
+        font-size: 13px; font-weight: 600;
+        background: linear-gradient(135deg, #a29bfe, #00cec9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* 容器 */
+    .container {
+        position: relative;
+        z-index: 10;
+        max-width: 700px;
+        margin: 50px auto 0;
+        animation: fadeUp 0.8s ease-out forwards;
+    }
+    @keyframes fadeUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 头部 */
+    .header {
+        margin-bottom: 28px;
+    }
+    .header h1 {
+        font-size: 28px; font-weight: 800;
+        margin-bottom: 6px;
+        background: linear-gradient(135deg, #e8e8f0, #a29bfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .header p {
+        font-size: 14px; color: rgba(255,255,255,0.3);
+    }
+
+    /* 应用卡片 */
+    .app-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin-bottom: 12px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    .app-card::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, hsla(var(--h, 220), 60%, 60%, 0.05), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .app-card:hover::before { opacity: 1; }
+    .app-card:hover {
+        border-color: rgba(255,255,255,0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+    }
+    .app-card:active { transform: scale(0.98); }
+
+    .app-icon {
+        width: 44px; height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center; justify-content: center;
+        font-size: 22px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        flex-shrink: 0;
+    }
+
+    .app-body { flex: 1; min-width: 0; }
+    .app-body .name {
+        font-size: 16px; font-weight: 600;
+        margin-bottom: 2px;
+    }
+    .app-body .desc {
+        font-size: 12px; color: rgba(255,255,255,0.25);
+    }
+
+    .app-arrow {
+        font-size: 16px;
+        color: rgba(255,255,255,0.12);
+        transition: all 0.3s;
+        flex-shrink: 0;
+    }
+    .app-card:hover .app-arrow {
+        color: rgba(255,255,255,0.4);
+        transform: translateX(4px);
+    }
+
+    /* 外部链接徽标 */
+    .app-tag {
+        font-size: 10px; font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 100px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.2);
+        margin-left: 8px;
+    }
+
+    /* 计数 */
+    .count-bar {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: rgba(255,255,255,0.12);
+    }
+
+    /* 页脚 */
+    .footer {
+        position: fixed; bottom: 0; left: 0; right: 0;
+        z-index: 100;
+        text-align: center;
+        padding: 10px;
+        font-size: 11px;
+        color: rgba(255,255,255,0.08);
+        background: rgba(11,11,26,0.4);
+        backdrop-filter: blur(6px);
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    .footer:hover { color: rgba(255,255,255,0.18); }
+
+    /* 涟漪 */
+    #rippleContainer {
+        position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+    }
+    .ripple {
+        position: absolute; border-radius: 50%;
+        border: 2px solid rgba(162,155,254,0.2);
+        transform: translate(-50%,-50%) scale(0);
+        animation: rippleAnim 0.8s ease-out forwards;
+        pointer-events: none;
+    }
+    @keyframes rippleAnim {
+        to { transform: translate(-50%,-50%) scale(4); opacity: 0; }
+    }
+
+    @media (max-width: 600px) {
+        body { padding: 24px 14px 70px; }
+        .app-card { padding: 14px 16px; }
+        .app-body .name { font-size: 14px; }
+        .app-icon { width: 38px; height: 38px; font-size: 18px; }
+    }
+    </style>
+</head>
+<body>
+
+<div class="bg-blur"><div></div><div></div></div>
+<div id="rippleContainer"></div>
+
+<!-- 导航 -->
+<div class="nav-bar">
+    <a href="./index.html">🏠 首页</a>
+    <span class="sep">/</span>
+    <span class="cur">应用</span>
+</div>
+
+<!-- 主体 -->
+<div class="container">
+    <div class="header">
+        <h1>📦 应用</h1>
+        <p>收录的实用工具与应用程序</p>
+    </div>
+
+    <a class="app-card" href="./apps/spaceSniffer/index.html" style="--h: 200">
+        <div class="app-icon">🗂️</div>
+        <div class="app-body">
+            <div class="name">SpaceSniffer</div>
+            <div class="desc">磁盘空间分析工具</div>
+        </div>
+        <div class="app-arrow">→</div>
+    </a>
+
+    <a class="app-card" href="./apps/flashPlayer11/index.html" style="--h: 30">
+        <div class="app-icon">⚡</div>
+        <div class="app-body">
+            <div class="name">FlashPlayer 11</div>
+            <div class="desc">Flash 播放器</div>
+        </div>
+        <div class="app-arrow">→</div>
+    </a>
+
+    <a class="app-card" href="https://www.python.org/ftp/python/3.11.1/python-3.11.1.exe" style="--h: 260" target="_blank">
+        <div class="app-icon">🐍</div>
+        <div class="app-body">
+            <div class="name">
+                Python 3.11.1
+                <span class="app-tag">外部链接</span>
+            </div>
+            <div class="desc">Python 编程语言安装包</div>
+        </div>
+        <div class="app-arrow">↗</div>
+    </a>
+
+    <a class="app-card" href="./apps/C++.exe" style="--h: 320" download>
+        <div class="app-icon">🖥️</div>
+        <div class="app-body">
+            <div class="name">Dev-Cpp 6.7.5</div>
+            <div class="desc">C/C++ 集成开发环境</div>
+        </div>
+        <div class="app-arrow">↓</div>
+    </a>
+
+    <a class="app-card" href="https://geekuninstaller.com/geek.zip" style="--h: 280" target="_blank">
+        <div class="app-icon">🧹</div>
+        <div class="app-body">
+            <div class="name">
+                Geek Uninstaller 1.5.3
+                <span class="app-tag">外部链接</span>
+            </div>
+            <div class="desc">轻量级软件卸载工具（个人免费版）</div>
+        </div>
+        <div class="app-arrow">↗</div>
+    </a>
+
+    <div class="count-bar">共收录 5 款应用</div>
+</div>
+
+<div class="footer" id="footerEl">🎓 桦甸市一中心小学 · 六年二班</div>
+
+<script>
+// 涟漪
+document.addEventListener('click', (e) => {
+    const c = document.getElementById('rippleContainer');
+    const el = document.createElement('div');
+    el.className = 'ripple';
+    el.style.left = e.clientX + 'px';
+    el.style.top = e.clientY + 'px';
+    const size = 20 + Math.random() * 40;
+    el.style.width = size + 'px'; el.style.height = size + 'px';
+    c.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+});
+
+// 页脚彩蛋
+document.getElementById('footerEl').addEventListener('click', function(e) {
+    e.stopPropagation();
+    const msgs = ['📦 应用大全', '🛠️ 实用工具', '⚡ 下载中心', '🎓 六年二班'];
+    const m = msgs[Math.random() * msgs.length | 0];
+    const el = document.createElement('div');
+    el.style.cssText = `
+        position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
+        z-index: 9999; font-size: 15px; font-weight: 600;
+        color: #a29bfe; pointer-events: none;
+        animation: flyUp 2s ease-out forwards;
+    `;
+    el.textContent = m;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+});
+
+const ss = document.createElement('style');
+ss.textContent = `
+    @keyframes flyUp {
+        0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+        20% { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+        80% { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+`;
+document.head.appendChild(ss);
+</script>
+</body>
 </html>

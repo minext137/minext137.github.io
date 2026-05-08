@@ -1,11 +1,399 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>HELPER</title>
-	</head>
-	<body>
-		<h1>下载修理手册</h1>
-		<a class="btna" href="./Helper/62SeewoHelpBook.chm" download="62SeewoHelpBook.chm">版本0.1</a>
-	</body>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELPER - 希沃大屏工具</title>
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: "Noto Sans SC", "微软雅黑", "PingFang SC", sans-serif;
+        background: #0b0b1a;
+        color: #e8e8f0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 20px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* 背景光晕 */
+    .bg-blur {
+        position: fixed; inset: 0; pointer-events: none;
+    }
+    .bg-blur div {
+        position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15;
+        animation: blobFloat 12s ease-in-out infinite alternate;
+    }
+    .bg-blur div:nth-child(1) {
+        width: 350px; height: 350px; background: #6c5ce7;
+        top: -10%; left: -10%;
+    }
+    .bg-blur div:nth-child(2) {
+        width: 300px; height: 300px; background: #00cec9;
+        bottom: -15%; right: -10%; animation-delay: 6s;
+    }
+    @keyframes blobFloat {
+        0% { transform: translate(0,0) scale(1); }
+        100% { transform: translate(30px,-30px) scale(1.15); }
+    }
+
+    /* 顶部导航 */
+    .nav-bar {
+        position: fixed; top: 0; left: 0; right: 0;
+        z-index: 100;
+        display: flex; align-items: center;
+        padding: 12px 20px;
+        background: rgba(11,11,26,0.6);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-bar a {
+        color: rgba(255,255,255,0.35);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: color 0.2s;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .nav-bar a:hover { color: rgba(255,255,255,0.6); }
+    .nav-bar .sep {
+        color: rgba(255,255,255,0.1);
+        margin: 0 10px;
+    }
+    .nav-bar .cur {
+        font-size: 13px; font-weight: 600;
+        background: linear-gradient(135deg, #a29bfe, #00cec9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* 主容器 */
+    .container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 520px;
+        animation: fadeUp 0.8s ease-out forwards;
+    }
+    @keyframes fadeUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 标题 */
+    .header {
+        text-align: center;
+        margin-bottom: 36px;
+    }
+    .header .icon {
+        font-size: 48px;
+        margin-bottom: 8px;
+    }
+    .header h1 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 6px;
+        background: linear-gradient(135deg, #e8e8f0, #a29bfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .header p {
+        font-size: 14px;
+        color: rgba(255,255,255,0.3);
+    }
+
+    /* 卡片 */
+    .card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 16px;
+        padding: 28px 24px;
+        margin-bottom: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+    .card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .card:nth-child(1)::before {
+        background: linear-gradient(135deg, rgba(108,92,231,0.06), transparent 60%);
+    }
+    .card:nth-child(2)::before {
+        background: linear-gradient(135deg, rgba(0,206,201,0.06), transparent 60%);
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card:hover {
+        border-color: rgba(255,255,255,0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+    }
+    .card:active {
+        transform: scale(0.98);
+    }
+
+    .card .card-icon {
+        font-size: 36px;
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .card .card-body {
+        flex: 1;
+        min-width: 0;
+    }
+    .card .card-body h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .card .card-body p {
+        font-size: 13px;
+        color: rgba(255,255,255,0.35);
+        line-height: 1.5;
+    }
+    .card .card-body .meta {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.04);
+        padding: 2px 10px;
+        border-radius: 100px;
+        margin-top: 6px;
+        border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .card .card-arrow {
+        font-size: 18px;
+        color: rgba(255,255,255,0.15);
+        transition: all 0.3s;
+        flex-shrink: 0;
+    }
+    .card:hover .card-arrow {
+        color: rgba(255,255,255,0.5);
+        transform: translateX(4px);
+    }
+
+    /* 分割装饰 */
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 20px 0;
+        color: rgba(255,255,255,0.08);
+        font-size: 12px;
+    }
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(255,255,255,0.06);
+    }
+
+    /* 统计 */
+    .stats {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin-top: 20px;
+    }
+    .stat-item {
+        text-align: center;
+    }
+    .stat-item .num {
+        font-size: 20px;
+        font-weight: 800;
+        color: #a29bfe;
+    }
+    .stat-item .lbl {
+        font-size: 11px;
+        color: rgba(255,255,255,0.2);
+        margin-top: 2px;
+    }
+
+    /* 页脚 */
+    .footer {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 100;
+        text-align: center;
+        padding: 10px;
+        font-size: 11px;
+        color: rgba(255,255,255,0.08);
+        background: rgba(11,11,26,0.4);
+        backdrop-filter: blur(6px);
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    .footer:hover {
+        color: rgba(255,255,255,0.2);
+    }
+
+    /* 涟漪 */
+    #rippleContainer {
+        position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+    }
+    .ripple {
+        position: absolute; border-radius: 50%;
+        border: 2px solid rgba(162,155,254,0.2);
+        transform: translate(-50%,-50%) scale(0);
+        animation: rippleAnim 0.8s ease-out forwards;
+        pointer-events: none;
+    }
+    @keyframes rippleAnim {
+        to { transform: translate(-50%,-50%) scale(4); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+        .container { max-width: 100%; }
+        .card { padding: 20px 16px; }
+        .card .card-icon { width: 44px; height: 44px; font-size: 28px; }
+        .stats { gap: 20px; }
+    }
+    </style>
+</head>
+<body>
+
+<div class="bg-blur"><div></div><div></div></div>
+<div id="rippleContainer"></div>
+
+<!-- 导航 -->
+<div class="nav-bar">
+    <a href="./index.html">🏠 首页</a>
+    <span class="sep">/</span>
+    <span class="cur">希沃大屏工具</span>
+</div>
+
+<!-- 主内容 -->
+<div class="container">
+    <div class="header">
+        <div class="icon">🖥️</div>
+        <h1>希沃大屏工具</h1>
+        <p>桦甸市一中心小学 · 六年二班</p>
+    </div>
+
+    <a class="card" href="./Helper/62SeewoHelpBook.chm" download="62SeewoHelpBook.chm" id="cardDownload">
+        <div class="card-icon">📘</div>
+        <div class="card-body">
+            <h2>修理手册</h2>
+            <p>希沃大屏常见问题排查与维护指南</p>
+            <span class="meta">📦 CHM · 0.1 版 · 点击下载</span>
+        </div>
+        <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="./62SeewoBIYE.html" id="cardGraduation">
+        <div class="card-icon">🎓</div>
+        <div class="card-body">
+            <h2>毕业纪念网页</h2>
+            <p>六年二班毕业动画 · 点击查看</p>
+            <span class="meta">✨ 2024 年毕业作品</span>
+        </div>
+        <div class="card-arrow">→</div>
+    </a>
+
+    <div class="divider">✦</div>
+
+    <div class="stats">
+        <div class="stat-item">
+            <div class="num" id="dlCount">0</div>
+            <div class="lbl">下载次数</div>
+        </div>
+        <div class="stat-item">
+            <div class="num" id="visitCount">0</div>
+            <div class="lbl">访问次数</div>
+        </div>
+    </div>
+</div>
+
+<div class="footer" id="footerEl">🎓 桦甸市一中心小学 · 六年二班</div>
+
+<script>
+// 涟漪
+document.addEventListener('click', (e) => {
+    const c = document.getElementById('rippleContainer');
+    const el = document.createElement('div');
+    el.className = 'ripple';
+    el.style.left = e.clientX + 'px';
+    el.style.top = e.clientY + 'px';
+    const size = 20 + Math.random() * 40;
+    el.style.width = size + 'px'; el.style.height = size + 'px';
+    c.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+});
+
+// 下载计数
+let dls = 0;
+try { dls = parseInt(localStorage.getItem('helperDlCount')) || 0; } catch(e) {}
+document.getElementById('dlCount').textContent = dls;
+
+document.getElementById('cardDownload').addEventListener('click', function() {
+    dls++;
+    document.getElementById('dlCount').textContent = dls;
+    try { localStorage.setItem('helperDlCount', dls); } catch(e) {}
+});
+
+// 访问计数
+let visits = 0;
+try { visits = parseInt(localStorage.getItem('helperVisitCount')) || 0; } catch(e) {}
+visits++;
+document.getElementById('visitCount').textContent = visits;
+try { localStorage.setItem('helperVisitCount', visits); } catch(e) {}
+
+// 页脚
+document.getElementById('footerEl').addEventListener('click', function(e) {
+    e.stopPropagation();
+    const msgs = ['希沃大屏 🖥️', '六年二班 🏆', '修理手册 📘', '毕业快乐 🎓'];
+    const m = msgs[Math.random() * msgs.length | 0];
+    const el = document.createElement('div');
+    el.style.cssText = `
+        position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+        z-index: 9999; font-size: 16px; font-weight: 600;
+        color: #a29bfe; pointer-events: none;
+        animation: flyUp 2s ease-out forwards;
+    `;
+    el.textContent = m;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+});
+
+const ss = document.createElement('style');
+ss.textContent = `
+    @keyframes flyUp {
+        0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+        20% { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+        80% { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-24px); }
+    }
+`;
+document.head.appendChild(ss);
+</script>
+</body>
 </html>
