@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMPT8528 - 代码</title>
+    <title>AMPT8528 - 应用</title>
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -12,15 +12,12 @@
         background: #0b0b1a;
         color: #e8e8f0;
         min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 32px 20px;
+        padding: 32px 20px 80px;
         position: relative;
-        overflow: hidden;
+        overflow-x: hidden;
     }
 
+    /* 背景光晕 */
     .bg-blur {
         position: fixed; inset: 0; pointer-events: none;
     }
@@ -29,10 +26,10 @@
         animation: blobFloat 12s ease-in-out infinite alternate;
     }
     .bg-blur div:nth-child(1) {
-        width: 400px; height: 400px; background: #00cec9; top: -10%; left: -5%;
+        width: 400px; height: 400px; background: #6c5ce7; top: -10%; left: -5%;
     }
     .bg-blur div:nth-child(2) {
-        width: 350px; height: 350px; background: #6c5ce7; bottom: -10%; right: -5%;
+        width: 350px; height: 350px; background: #00cec9; bottom: -10%; right: -5%;
         animation-delay: 6s;
     }
     @keyframes blobFloat {
@@ -40,7 +37,7 @@
         100% { transform: translate(30px,-30px) scale(1.15); }
     }
 
-    /* 导航 */
+    /* 导航栏 */
     .nav-bar {
         position: fixed; top: 0; left: 0; right: 0;
         z-index: 100;
@@ -61,7 +58,7 @@
     .nav-bar .sep { color: rgba(255,255,255,0.1); margin: 0 10px; }
     .nav-bar .cur {
         font-size: 13px; font-weight: 600;
-        background: linear-gradient(135deg, #00cec9, #a29bfe);
+        background: linear-gradient(135deg, #a29bfe, #00cec9);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -71,8 +68,8 @@
     .container {
         position: relative;
         z-index: 10;
-        text-align: center;
-        max-width: 460px;
+        max-width: 700px;
+        margin: 50px auto 0;
         animation: fadeUp 0.8s ease-out forwards;
     }
     @keyframes fadeUp {
@@ -80,85 +77,101 @@
         100% { opacity: 1; transform: translateY(0); }
     }
 
-    .container .emoji {
-        font-size: 64px;
-        margin-bottom: 16px;
-        animation: floatEmoji 3s ease-in-out infinite;
+    /* 头部 */
+    .header {
+        margin-bottom: 28px;
     }
-    @keyframes floatEmoji {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-
-    .container h1 {
+    .header h1 {
         font-size: 28px; font-weight: 800;
-        margin-bottom: 10px;
-        background: linear-gradient(135deg, #e8e8f0, #00cec9);
+        margin-bottom: 6px;
+        background: linear-gradient(135deg, #e8e8f0, #a29bfe);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
-    .container .desc {
-        font-size: 15px;
-        color: rgba(255,255,255,0.35);
-        line-height: 1.8;
-        margin-bottom: 28px;
+    .header p {
+        font-size: 14px; color: rgba(255,255,255,0.3);
     }
 
-    .container .empty-box {
-        background: rgba(255,255,255,0.03);
-        border: 1px dashed rgba(255,255,255,0.1);
-        border-radius: 14px;
-        padding: 40px 24px;
-        margin-bottom: 20px;
-        transition: all 0.3s;
-    }
-    .container .empty-box:hover {
-        border-color: rgba(255,255,255,0.18);
-        background: rgba(255,255,255,0.04);
-    }
-
-    .empty-box .empty-icon {
-        font-size: 42px;
-        margin-bottom: 12px;
-        opacity: 0.3;
-    }
-    .empty-box .empty-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: rgba(255,255,255,0.25);
-        margin-bottom: 6px;
-    }
-    .empty-box .empty-desc {
-        font-size: 13px;
-        color: rgba(255,255,255,0.15);
-    }
-
-    .container .hint {
-        font-size: 12px;
-        color: rgba(255,255,255,0.1);
-        line-height: 1.8;
-    }
-
-    .container .btn-back {
-        display: inline-flex;
+    /* 应用卡片 */
+    .app-card {
+        display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 12px 28px;
-        border-radius: 100px;
-        font-size: 14px; font-weight: 600;
-        color: rgba(255,255,255,0.5);
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
+        gap: 16px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin-bottom: 12px;
         text-decoration: none;
-        transition: all 0.25s;
-        margin-top: 8px;
+        color: inherit;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
     }
-    .container .btn-back:hover {
-        background: rgba(255,255,255,0.08);
-        border-color: rgba(255,255,255,0.18);
-        color: rgba(255,255,255,0.7);
+    .app-card::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, hsla(var(--h, 220), 60%, 60%, 0.05), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .app-card:hover::before { opacity: 1; }
+    .app-card:hover {
+        border-color: rgba(255,255,255,0.15);
         transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+    }
+    .app-card:active { transform: scale(0.98); }
+
+    .app-icon {
+        width: 44px; height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center; justify-content: center;
+        font-size: 22px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        flex-shrink: 0;
+    }
+
+    .app-body { flex: 1; min-width: 0; }
+    .app-body .name {
+        font-size: 16px; font-weight: 600;
+        margin-bottom: 2px;
+    }
+    .app-body .desc {
+        font-size: 12px; color: rgba(255,255,255,0.25);
+    }
+
+    .app-arrow {
+        font-size: 16px;
+        color: rgba(255,255,255,0.12);
+        transition: all 0.3s;
+        flex-shrink: 0;
+    }
+    .app-card:hover .app-arrow {
+        color: rgba(255,255,255,0.4);
+        transform: translateX(4px);
+    }
+
+    /* 外部链接徽标 */
+    .app-tag {
+        font-size: 10px; font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 100px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.2);
+        margin-left: 8px;
+    }
+
+    /* 计数 */
+    .count-bar {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: rgba(255,255,255,0.12);
     }
 
     /* 页脚 */
@@ -191,10 +204,11 @@
         to { transform: translate(-50%,-50%) scale(4); opacity: 0; }
     }
 
-    @media (max-width: 500px) {
-        body { padding: 24px 18px; }
-        .container .emoji { font-size: 48px; }
-        .container h1 { font-size: 24px; }
+    @media (max-width: 600px) {
+        body { padding: 24px 14px 70px; }
+        .app-card { padding: 14px 16px; }
+        .app-body .name { font-size: 14px; }
+        .app-icon { width: 38px; height: 38px; font-size: 18px; }
     }
     </style>
 </head>
@@ -212,53 +226,40 @@
 
 <!-- 主体 -->
 <div class="container">
-    <div class="emoji">💻</div>
-    <h1>代码源码</h1>
-    <p class="desc">开源代码与项目源码</p>
-
-    <div class="empty-box" id="emptyBox">
-        <div class="empty-icon">📂</div>
-        <div class="empty-title">C语言基础</div>
-        <div class="empty-desc">代码库正在建设中，敬请期待</div>
+    <div class="header">
+        <h1>📦 代码</h1>
+        <p>有问题发送至3363355868@qq.com</p>
+		<a class="app-card" href="apps/11.exe" style="--h: 280" target="_blank">
+			    <div class="app-icon">C️</div>
+			    <div class="app-body">
+			        <div class="name">
+			            飞鸟游戏
+			            <span class="app-tag">EXE</span>
+			        </div>
+			        <div class="desc">DEMO 0.1</div>
+			    </div>
+			    <div class="app-arrow">↗</div>
+			</a>
+			<a class="app-card" href="apps/1.cpp" style="--h: 280" target="_blank">
+				    <div class="app-icon">C️</div>
+				    <div class="app-body">
+				        <div class="name">
+				            飞鸟游戏
+				            <span class="app-tag">C</span>
+				        </div>
+				        <div class="desc">DEMO 0.1</div>
+				    </div>
+				    <div class="app-arrow">↗</div>
+				</a>
     </div>
-
-    <div class="hint">
-        有新项目时会在这里展示<br>
-        点击空白区域可切换表情
-    </div>
-
-    <a href="./index.html" class="btn-back">← 返回首页</a>
+	
+    <!-- <div class="count-bar">共收录 ? 款应用</div> -->
 </div>
 
 <!-- <div class="footer" id="footerEl">🎓 桦甸市一中心小学 · 六年二班</div> -->
 
 <script>
-// ===== 点击空盒子切换表情 =====
-const emptyBox = document.getElementById('emptyBox');
-const states = [
-    { icon: '📂', title: '暂无内容', desc: '代码库正在建设中，敬请期待' },
-    { icon: '🛠️', title: '正在开发中', desc: '好东西需要时间打磨' },
-    { icon: '🚀', title: 'Coming Soon', desc: '很快就会有新项目上线' },
-    { icon: '✨', title: '还没想好放什么', desc: '也许你可以给我一个建议' },
-    { icon: '💡', title: '有想法？', desc: '想在这里看到什么项目？' },
-];
-let si = 0;
-
-emptyBox.addEventListener('click', function(e) {
-    e.stopPropagation();
-    si = (si + 1) % states.length;
-    const s = states[si];
-    this.querySelector('.empty-icon').textContent = s.icon;
-    this.querySelector('.empty-title').textContent = s.title;
-    this.querySelector('.empty-desc').textContent = s.desc;
-
-    // 弹跳反馈
-    this.style.transition = 'transform 0.1s';
-    this.style.transform = 'scale(0.97)';
-    setTimeout(() => { this.style.transform = 'scale(1)'; }, 120);
-});
-
-// ===== 涟漪 =====
+// 涟漪
 document.addEventListener('click', (e) => {
     const c = document.getElementById('rippleContainer');
     const el = document.createElement('div');
@@ -271,16 +272,16 @@ document.addEventListener('click', (e) => {
     setTimeout(() => el.remove(), 900);
 });
 
-// ===== 页脚彩蛋 =====
+// 页脚彩蛋
 document.getElementById('footerEl').addEventListener('click', function(e) {
     e.stopPropagation();
-    const msgs = ['💻 代码改变世界', '🚀 正在开发', '🛠️ 敬请期待', '🎓 六年二班'];
+    const msgs = ['📦 应用大全', '🛠️ 实用工具', '⚡ 下载中心', '🎓 六年二班'];
     const m = msgs[Math.random() * msgs.length | 0];
     const el = document.createElement('div');
     el.style.cssText = `
         position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
         z-index: 9999; font-size: 15px; font-weight: 600;
-        color: #00cec9; pointer-events: none;
+        color: #a29bfe; pointer-events: none;
         animation: flyUp 2s ease-out forwards;
     `;
     el.textContent = m;
