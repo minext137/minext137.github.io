@@ -1,4 +1,4 @@
-/* ========================================
+ /* ========================================
    AMPT8528 - 首页样式
    ======================================== */
 
@@ -83,6 +83,7 @@ a {
 
 .nav-logo {
     font-weight: 800;
+	width:1000px;
     font-size: 20px;
     background: linear-gradient(135deg, #6c5ce7, #00cec9);
     -webkit-background-clip: text;
