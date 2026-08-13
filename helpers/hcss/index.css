@@ -1,0 +1,15 @@
+.titleArea{
+	background-color: rgba(0,0,255,1.0);
+	height:125px;
+}
+.titleMainText{
+	color:rgba(255,255,255,1.0);
+	text-align:center;
+	padding-top:30px;
+}
+.contentArea{
+	border:2.5px solid rgba(0,0,0,1.0);
+	margin-left:100px;
+	margin-right:100px;
+	margin-top:25px;
+}

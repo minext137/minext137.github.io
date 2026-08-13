@@ -1,0 +1,33 @@
+.titleArea{
+	background-color: rgba(0,0,255,1.0);
+	height:125px;
+}
+.titleMainText{
+	color:rgba(255,255,255,1.0);
+	text-align:center;
+	
+}
+.contentArea{
+	border:2.5px solid rgba(0,0,0,1.0);
+	margin-left:100px;
+	margin-right:100px;
+	margin-top:20px;
+}
+.backToIndex{
+	width:100%;
+	background-color: rgb(255,255,0);
+}
+p,h2,h3{
+	margin:0;
+	padding:0;
+}
+.notice{
+	color:red;
+}
+.codebar{
+	background-color: rgb(43, 43, 43);
+	border-radius:5px;
+}
+.codebar-text{
+	color:white;
+}
