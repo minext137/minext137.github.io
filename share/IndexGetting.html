@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Query Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f2f2f2;
+            color: #222;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #b8b8b8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        .window-header {
+            background-color: #0078d7;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-body {
+            padding: 24px;
+        }
+
+        .form-item {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #999;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #0078d7;
+            box-shadow: 0 0 0 1px #0078d7;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        button {
+            padding: 7px 16px;
+            border: 1px solid #0078d7;
+            background-color: #0078d7;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        button:hover {
+            background-color: #005a9e;
+        }
+
+        button.secondary {
+            background-color: #f2f2f2;
+            color: #222;
+            border-color: #999;
+        }
+
+        button.secondary:hover {
+            background-color: #e6e6e6;
+        }
+
+        .tip-text {
+            margin-top:16px;
+            font-size:12px;
+            color:#666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="window-header">
+            <span>Link Query</span>
+        </div>
+        <div class="window-body">
+            <div class="form-item">
+                <label>LinkName</label>
+                <input type="text" id="LinkName" placeholder="Enter link name">
+            </div>
+            <div class="form-item">
+                <label>LinkPassKey</label>
+                <input type="password" id="LinkPassKey" placeholder="Enter encrypted pass key">
+            </div>
+            <div class="btn-group">
+                <button class="secondary" id="btnReset">Reset</button>
+                <button id="btnQuery">Query</button>
+            </div>
+            <p class="tip-text">Please input LinkName and encrypted LinkPassKey to start query.</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM events for backend binding, you can replace logic
+        const $ = selector => document.querySelector(selector);
+        const btnQuery = $("#btnQuery");
+        const btnReset = $("#btnReset");
+        const inputLinkName = $("#LinkName");
+        const inputLinkPassKey = $("#LinkPassKey");
+
+        btnQuery.addEventListener("click", () => {
+            if (inputLinkName.value==="bmm4qbht" && inputLinkPassKey.value==="amptPass001"){
+				document.location="https://www.geegeng.com/s/11xW2yaKA"
+			}
+			
+			else{
+				alert("Search Engine: Nothing we searched!")
+			}
+            const payload = {
+                LinkName: inputLinkName.value,
+                LinkPassKey: inputLinkPassKey.value
+            };
+            console.log("Query payload", payload);
+        });
+
+        btnReset.addEventListener("click", () => {
+            inputLinkName.value = "";
+            inputLinkPassKey.value = "";
+        });
+    </script>
+</body>
+</html>
