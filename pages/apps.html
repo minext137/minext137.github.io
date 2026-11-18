@@ -174,7 +174,7 @@
         color: rgba(255,255,255,0.12);
     }
 
-    /* 失效公告 */
+    /* 故障公告 */
     .notice {
         display: flex;
         align-items: flex-start;
@@ -213,6 +213,16 @@
     }
     .notice .n-body strong {
         color: #ff8fa3; font-weight: 600;
+    }
+    .notice .n-code {
+        display: inline-block;
+        padding: 1px 7px;
+        border-radius: 6px;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 12px;
+        color: #ffd08a;
+        background: rgba(255,171,64,0.12);
+        border: 1px solid rgba(255,171,64,0.25);
     }
     .notice .n-tip {
         display: block;
@@ -283,15 +293,15 @@
         <p>收录的实用工具与应用程序</p>
     </div>
 
-    <!-- 失效公告 -->
+    <!-- 故障公告 -->
     <div class="notice">
         <div class="n-icon">⚠️</div>
         <div class="n-text">
-            <div class="n-title">重要通知：桔梗网盘资源已全部失效</div>
+            <div class="n-title">重要通知：桔梗网盘服务器异常，文件暂时无法下载</div>
             <div class="n-body">
-                本网站所有存放在<strong>桔梗网盘（geegeng.com）</strong>的文件，现已<strong>全部无法下载</strong>。<br>
-                原分享链接均已失效，点击后会提示文件不存在或分享已取消，请不要反复点击或转存。
-                <span class="n-tip">更新日期：2026-11-18 · 如资源恢复或更换网盘，会在本页另行通知</span>
+                本网站所有存放在<strong>桔梗网盘（geegeng.com）</strong>的文件，因网盘服务器出现故障，打开时返回 <span class="n-code">403</span> / <span class="n-code">Gateway</span> 错误页，现已<strong>全部无法下载</strong>。<br>
+                注意：<strong>并非分享链接过期</strong>，是网盘服务端自身出了问题，请不要再反复点击或转存，等网盘恢复后即可正常下载。
+                <span class="n-tip">更新时间：2026-11-18 · 网盘恢复后会在本页更新通知</span>
             </div>
         </div>
     </div>
