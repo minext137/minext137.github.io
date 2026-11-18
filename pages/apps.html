@@ -164,7 +164,6 @@
         border: 1px solid rgba(255,255,255,0.06);
         color: rgba(255,255,255,0.2);
         margin-left: 8px;
-        vertical-align: middle;
     }
 
     /* 计数 */
@@ -507,4 +506,48 @@
 
 <script>
 // 涟漪
-[...]
+document.addEventListener('click', (e) => {
+    const c = document.getElementById('rippleContainer');
+    const el = document.createElement('div');
+    el.className = 'ripple';
+    el.style.left = e.clientX + 'px';
+    el.style.top = e.clientY + 'px';
+    const size = 20 + Math.random() * 40;
+    el.style.width = size + 'px'; el.style.height = size + 'px';
+    c.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+});
+
+// 页脚彩蛋
+const footerEl = document.getElementById('footerEl');
+if (footerEl) {
+    footerEl.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const msgs = ['📦 应用大全', '🛠️ 实用工具', '⚡ 下载中心', '🎓 六年二班'];
+        const m = msgs[Math.random() * msgs.length | 0];
+        const el = document.createElement('div');
+        el.style.cssText = `
+            position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; font-size: 15px; font-weight: 600;
+            color: #a29bfe; pointer-events: none;
+            animation: flyUp 2s ease-out forwards;
+        `;
+        el.textContent = m;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2200);
+    });
+}
+
+const ss = document.createElement('style');
+ss.textContent = `
+    @keyframes flyUp {
+        0% { opacity: 0; transform: translateX(-50%) translateY(0); }
+        20% { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+        80% { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+`;
+document.head.appendChild(ss);
+</script>
+</body>
+</html>
